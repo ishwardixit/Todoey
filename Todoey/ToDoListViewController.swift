@@ -12,8 +12,19 @@ class ToDoListViewController: UITableViewController {
 
     var itemArray = ["Find Mike","Buy Eggos","Destroy Demogorgon"]
     
+   // to save the data into the user's default database know as SandBox
+    
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+        // the statement written below may crash the app if in case the array in the sandbox cantnot be retieved
+       // itemArray = defaults.array(forKey: "ToDoListItems") as! [String]
+        // but this statement ensures the app should not crash
+        if let item = defaults.array(forKey: "ToDoListItems") as? [String]{
+            itemArray = item
+        }
         
     }
     
@@ -47,8 +58,12 @@ class ToDoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add item", style: .default) { (action) in
             print("success")
+           
             self.itemArray.append(item.text!)
             print(self.itemArray)
+            
+            self.defaults.set(self.itemArray, forKey: "ToDoListItems")
+           
             self.tableView.reloadData()
         }
         
